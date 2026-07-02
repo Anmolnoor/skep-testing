@@ -35,3 +35,5 @@ pytest test_calculator.py
 ## Testing
 
 This repository is exercised by Skep end-to-end tests.
+
+Maintained with Skep.
