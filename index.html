@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Advanced Calculator</h1>
+      <button id="theme-toggle" aria-label="Toggle dark/light theme">🌙</button>
+    </header>
+    <nav role="tablist" aria-label="Calculator modes">
+      <button role="tab" aria-selected="true" aria-controls="panel-standard" id="tab-standard" tabindex="0">Standard</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-scientific" id="tab-scientific" tabindex="-1">Scientific</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-unit" id="tab-unit" tabindex="-1">Unit Converter</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-base" id="tab-base" tabindex="-1">Base Converter</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-currency" id="tab-currency" tabindex="-1">Currency</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-date" id="tab-date" tabindex="-1">Date Calculator</button>
+    </nav>
+    <main>
+      <!-- Standard Calculator -->
+      <div role="tabpanel" id="panel-standard" aria-labelledby="tab-standard">
+        <div class="calculator">
+          <div class="display" id="display-standard" aria-live="polite" aria-atomic="true">0</div>
+          <div class="buttons">
+            <button class="clear" data-action="clear">C</button>
+            <button class="backspace" data-action="backspace">⌫</button>
+            <button class="percent" data-action="percent">%</button>
+            <button class="operator" data-action="divide">÷</button>
+            <button data-value="7">7</button>
+            <button data-value="8">8</button>
+            <button data-value="9">9</button>
+            <button class="operator" data-action="multiply">×</button>
+            <button data-value="4">4</button>
+            <button data-value="5">5</button>
+            <button data-value="6">6</button>
+            <button class="operator" data-action="subtract">−</button>
+            <button data-value="1">1</button>
+            <button data-value="2">2</button>
+            <button data-value="3">3</button>
+            <button class="operator" data-action="add">+</button>
+            <button class="sign" data-action="sign">±</button>
+            <button data-value="0">0</button>
+            <button data-value=".">.</button>
+            <button class="equals" data-action="equals">=</button>
+          </div>
+        </div>
+      </div>
+      <!-- Scientific Calculator -->
+      <div role="tabpanel" id="panel-scientific" aria-labelledby="tab-scientific" hidden>
+        <div class="calculator">
+          <div class="display" id="display-scientific" aria-live="polite" aria-atomic="true">0</div>
+          <div class="buttons scientific-buttons">
+            <button data-action="sin">sin</button>
+            <button data-action="cos">cos</button>
+            <button data-action="tan">tan</button>
+            <button data-action="log">log</button>
+            <button data-action="ln">ln</button>
+            <button data-action="sqrt">√</button>
+            <button data-action="pow">x^y</button>
+            <button data-action="pi">π</button>
+            <button data-action="e">e</button>
+            <button data-action="factorial">x!</button>
+            <button data-action="clear">C</button>
+            <button data-action="backspace">⌫</button>
+            <button data-value="7">7</button>
+            <button data-value="8">8</button>
+            <button data-value="9">9</button>
+            <button data-action="divide">÷</button>
+            <button data-value="4">4</button>
+            <button data-value="5">5</button>
+            <button data-value="6">6</button>
+            <button data-action="multiply">×</button>
+            <button data-value="1">1</button>
+            <button data-value="2">2</button>
+            <button data-value="3">3</button>
+            <button data-action="subtract">−</button>
+            <button data-value="0">0</button>
+            <button data-value=".">.</button>
+            <button data-action="sign">±</button>
+            <button data-action="add">+</button>
+            <button data-action="equals">=</button>
+          </div>
+        </div>
+      </div>
+      <!-- Unit Converter -->
+      <div role="tabpanel" id="panel-unit" aria-labelledby="tab-unit" hidden>
+        <div class="converter">
+          <h2>Unit Converter</h2>
+          <label for="unit-category">Category:</label>
+          <select id="unit-category">
+            <option value="length">Length</option>
+            <option value="temperature">Temperature</option>
+            <option value="weight">Weight</option>
+            <option value="volume">Volume</option>
+          </select>
+          <label for="unit-from">From:</label>
+          <select id="unit-from"></select>
+          <label for="unit-to">To:</label>
+          <select id="unit-to"></select>
+          <label for="unit-value">Value:</label>
+          <input type="number" id="unit-value" step="any">
+          <button id="unit-convert">Convert</button>
+          <div id="unit-result" aria-live="polite"></div>
+        </div>
+      </div>
+      <!-- Base Converter -->
+      <div role="tabpanel" id="panel-base" aria-labelledby="tab-base" hidden>
+        <div class="converter">
+          <h2>Base Converter</h2>
+          <label for="base-input">Input:</label>
+          <input type="text" id="base-input" placeholder="Enter number">
+          <label for="base-from">From base:</label>
+          <select id="base-from">
+            <option value="2">Binary (2)</option>
+            <option value="8">Octal (8)</option>
+            <option value="10" selected>Decimal (10)</option>
+            <option value="16">Hexadecimal (16)</option>
+          </select>
+          <label for="base-to">To base:</label>
+          <select id="base-to">
+            <option value="2">Binary (2)</option>
+            <option value="8">Octal (8)</option>
+            <option value="10">Decimal (10)</option>
+            <option value="16" selected>Hexadecimal (16)</option>
+          </select>
+          <button id="base-convert">Convert</button>
+          <div id="base-result" aria-live="polite"></div>
+        </div>
+      </div>
+      <!-- Currency Converter -->
+      <div role="tabpanel" id="panel-currency" aria-labelledby="tab-currency" hidden>
+        <div class="converter">
+          <h2>Currency Converter (Static Rates)</h2>
+          <label for="currency-amount">Amount:</label>
+          <input type="number" id="currency-amount" step="any">
+          <label for="currency-from">From:</label>
+          <select id="currency-from">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="JPY">JPY</option>
+            <option value="CNY">CNY</option>
+          </select>
+          <label for="currency-to">To:</label>
+          <select id="currency-to">
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="JPY">JPY</option>
+            <option value="CNY">CNY</option>
+          </select>
+          <button id="currency-convert">Convert</button>
+          <div id="currency-result" aria-live="polite"></div>
+        </div>
+      </div>
+      <!-- Date Calculator -->
+      <div role="tabpanel" id="panel-date" aria-labelledby="tab-date" hidden>
+        <div class="date-calculator">
+          <h2>Date Difference Calculator</h2>
+          <label for="date-start">Start date:</label>
+          <input type="date" id="date-start">
+          <label for="date-end">End date:</label>
+          <input type="date" id="date-end">
+          <button id="date-calculate">Calculate Difference</button>
+          <div id="date-result" aria-live="polite"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

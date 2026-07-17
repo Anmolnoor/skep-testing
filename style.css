@@ -1,0 +1,274 @@
+:root {
+  --bg: #f5f5f5;
+  --text: #222;
+  --card-bg: #fff;
+  --btn-bg: #e0e0e0;
+  --btn-hover: #d0d0d0;
+  --operator-bg: #f0a030;
+  --operator-hover: #e09020;
+  --equals-bg: #4caf50;
+  --equals-hover: #45a049;
+  --clear-bg: #f44336;
+  --clear-hover: #e53935;
+  --border: #ccc;
+  --tab-active-bg: #fff;
+  --tab-inactive-bg: #e0e0e0;
+  --display-bg: #e8f5e9;
+  --display-text: #222;
+}
+
+[data-theme="dark"] {
+  --bg: #121212;
+  --text: #e0e0e0;
+  --card-bg: #1e1e1e;
+  --btn-bg: #333;
+  --btn-hover: #444;
+  --operator-bg: #ff8c00;
+  --operator-hover: #e07b00;
+  --equals-bg: #388e3c;
+  --equals-hover: #2e7d32;
+  --clear-bg: #d32f2f;
+  --clear-hover: #c62828;
+  --border: #444;
+  --tab-active-bg: #1e1e1e;
+  --tab-inactive-bg: #333;
+  --display-bg: #1b5e20;
+  --display-text: #e0e0e0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem;
+}
+
+.container {
+  max-width: 500px;
+  width: 100%;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  transition: background 0.3s;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+#theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+#theme-toggle:hover {
+  background: var(--btn-hover);
+}
+
+nav[role="tablist"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+[role="tab"] {
+  background: var(--tab-inactive-bg);
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s, color 0.2s;
+  color: var(--text);
+}
+
+[role="tab"][aria-selected="true"] {
+  background: var(--tab-active-bg);
+  border-bottom: 2px solid var(--operator-bg);
+  font-weight: bold;
+}
+
+[role="tab"]:hover {
+  background: var(--btn-hover);
+}
+
+[role="tabpanel"] {
+  outline: none;
+}
+
+[role="tabpanel"][hidden] {
+  display: none;
+}
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.display {
+  background: var(--display-bg);
+  color: var(--display-text);
+  font-size: 2rem;
+  font-family: 'Courier New', monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  text-align: right;
+  min-height: 3.5rem;
+  word-break: break-all;
+  overflow-x: auto;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.scientific-buttons {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+button {
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: var(--btn-bg);
+  color: var(--text);
+  transition: background 0.15s, transform 0.1s;
+}
+
+button:hover {
+  background: var(--btn-hover);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.operator {
+  background: var(--operator-bg);
+  color: #fff;
+}
+
+.operator:hover {
+  background: var(--operator-hover);
+}
+
+.equals {
+  background: var(--equals-bg);
+  color: #fff;
+}
+
+.equals:hover {
+  background: var(--equals-hover);
+}
+
+.clear {
+  background: var(--clear-bg);
+  color: #fff;
+}
+
+.clear:hover {
+  background: var(--clear-hover);
+}
+
+.converter, .date-calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.converter h2, .date-calculator h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+select, input[type="number"], input[type="text"], input[type="date"] {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 1rem;
+  width: 100%;
+}
+
+button#unit-convert, button#base-convert, button#currency-convert, button#date-calculate {
+  background: var(--operator-bg);
+  color: #fff;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button#unit-convert:hover, button#base-convert:hover, button#currency-convert:hover, button#date-calculate:hover {
+  background: var(--operator-hover);
+}
+
+#unit-result, #base-result, #currency-result, #date-result {
+  background: var(--display-bg);
+  color: var(--display-text);
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  min-height: 2.5rem;
+}
+
+@media (max-width: 400px) {
+  .container {
+    padding: 1rem;
+  }
+  [role="tab"] {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.5rem;
+  }
+  .buttons {
+    gap: 0.3rem;
+  }
+  button {
+    padding: 0.6rem;
+    font-size: 1rem;
+  }
+}
