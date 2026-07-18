@@ -159,6 +159,34 @@ The suite covers the following cases:
 
 This repository is primarily a test fixture and demo project. See any `LICENSE` file if present for licensing details.
 
+## HTML Version
+
+In addition to the Python CLI, the calculator is also available as a standalone web page in [`index.html`](index.html). It is a self-contained scientific calculator with embedded CSS and JavaScript — no build step or dependencies required. Open the file directly in any modern browser.
+
+### Web calculator features
+
+- **Dark-themed UI** matching the project aesthetic.
+- **Display area** showing the current expression and result.
+- **Basic operators**: `+`, `−`, `×`, `÷`, `%`, parentheses.
+- **Scientific functions**: `sin`, `cos`, `tan` (degrees), `log` (base 10), `ln`, `√` (sqrt), `^` (power), `!` (factorial).
+- **Constants**: `π` (pi) and `e`.
+- **Keyboard support**: digits, operators, `Enter`/`=` to evaluate, `Backspace` to delete, `Esc` to clear.
+
+### Running the web calculator
+
+Simply open `index.html` in your browser:
+
+```bash
+# macOS
+open index.html
+
+# Linux
+xdg-open index.html
+
+# Windows
+start index.html
+```
+
 ---
 
 Maintained with Skep.
