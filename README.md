@@ -162,3 +162,13 @@ This repository is primarily a test fixture and demo project. See any `LICENSE` 
 ---
 
 Maintained with Skep.
+
+## HTML Version
+
+The calculator is also available as a web page — open `index.html` in a browser. Features include:
+- Standard calculator with memory functions
+- Unit conversions
+- Number base conversion
+- Currency converter
+- Date/time calculator
+- Light/dark theme toggle
