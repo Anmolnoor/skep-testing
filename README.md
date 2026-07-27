@@ -78,6 +78,29 @@ cd skep-testing
 
 This repository is a demo project. See any `LICENSE` file if present for licensing details.
 
+## Author
+
+**Anmol Noor** — Software Engineer
+
+- 🌐 Portfolio: [anmolnoor.com](https://anmolnoor.com)
+- 🐙 GitHub: [@Anmolnoor](https://github.com/Anmolnoor)
+- 💼 LinkedIn: [anmol-noor](https://www.linkedin.com/in/anmol-noor/)
+- 🐦 X: [@noor_anmol](https://twitter.com/noor_anmol)
+- 📧 Email: anmolnoor59@gmail.com
+- 📅 Cal.com: [cal.com/anmolnoor](https://cal.com/anmolnoor)
+- 📍 Vancouver, BC, Canada
+
+## Built With
+
+This calculator was built using [Skep](https://github.com/Anmolnoor/skep) — an agent supervisor that dispatches sandboxed coding workers with policy gates and approval workflows. The worker was powered by the glm-5.2 model via Ollama Cloud.
+
+**Tech Stack:**
+- HTML5
+- Tailwind CSS (via CDN)
+- Vanilla JavaScript
+- [Skep](https://github.com/Anmolnoor/skep) — agent supervisor & worker dispatch
+- [Ollama](https://ollama.com) — LLM inference (glm-5.2:cloud)
+
 ---
 
 Maintained with Skep.
