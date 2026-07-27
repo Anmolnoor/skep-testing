@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Verify the HTML calculator project meets all requirements."""
+import ast
 import re
 import sys
 import os
@@ -75,6 +76,64 @@ if 'DEG' not in html or 'RAD' not in html:
 if 'Error' not in html:
     errors.append('Error handling for division by zero not found')
 
+# 7. Nav bar with calculator + todo tabs
+if '<nav' not in html:
+    errors.append('Navigation bar (<nav>) not found in index.html')
+for element_id in ['tab-calculator', 'tab-todo', 'view-calculator', 'view-todo']:
+    if f'id="{element_id}"' not in html:
+        errors.append(f'Nav/view element with id="{element_id}" not found in index.html')
+if 'Todo List' not in html:
+    errors.append('"Todo List" tab label not found in index.html')
+
+# 8. Todo list UI elements
+for element_id in ['todo-input', 'todo-add', 'todo-list', 'todo-empty']:
+    if f'id="{element_id}"' not in html:
+        errors.append(f'Todo element with id="{element_id}" not found in index.html')
+if 'checkbox' not in html:
+    errors.append('Todo checkbox not found in index.html')
+if 'line-through' not in html:
+    errors.append('Strikethrough style for completed todos not found in index.html')
+
+# 9. Todo frontend wired to the REST API
+if 'fetch(' not in html:
+    errors.append('fetch() calls to the todo API not found in index.html')
+if '/api/todos' not in html:
+    errors.append('/api/todos endpoint not referenced in index.html')
+for method in ['POST', 'PUT', 'DELETE']:
+    if f"'{method}'" not in html:
+        errors.append(f'{method} request to the todo API not found in index.html')
+
+# --- server.py checks ---
+if not os.path.exists('server.py'):
+    errors.append('server.py does not exist')
+else:
+    with open('server.py', 'r', encoding='utf-8') as f:
+        server_src = f.read()
+    try:
+        ast.parse(server_src)
+    except SyntaxError as exc:
+        errors.append(f'server.py is not valid Python: {exc}')
+    for handler in ['do_GET', 'do_POST', 'do_PUT', 'do_DELETE']:
+        if handler not in server_src:
+            errors.append(f'server.py is missing the {handler} handler')
+    if '/api/todos' not in server_src:
+        errors.append('server.py does not define the /api/todos route')
+    if 'todos.json' not in server_src:
+        errors.append('server.py does not store todos in a JSON file')
+    if 'makedirs' not in server_src or 'exist_ok' not in server_src:
+        errors.append('server.py does not auto-create the data directory (os.makedirs(..., exist_ok=True))')
+    if '8000' not in server_src:
+        errors.append('server.py does not run on port 8000')
+
+# --- .gitignore checks ---
+if not os.path.exists('.gitignore'):
+    errors.append('.gitignore does not exist')
+else:
+    with open('.gitignore', 'r', encoding='utf-8') as f:
+        gitignore_lines = [line.strip() for line in f]
+    if 'data/' not in gitignore_lines:
+        errors.append('.gitignore does not ignore data/')
+
 # --- README.md checks ---
 if not os.path.exists('README.md'):
     errors.append('README.md does not exist')
@@ -110,6 +169,11 @@ else:
     print('  - Keyboard event listeners: present')
     print('  - DEG/RAD toggle: present')
     print('  - Division by zero error handling: present')
+    print('  - Nav bar: Calculator + Todo List tabs present')
+    print('  - Todo UI: input, add button, list container, empty state, strikethrough')
+    print('  - Todo frontend: fetch calls for GET/POST/PUT/DELETE /api/todos')
+    print('  - server.py: valid Python, REST handlers, JSON storage, auto-creates data/, port 8000')
+    print('  - .gitignore: ignores data/')
     print('  - README.md: mentions HTML calculator, Tailwind, scientific functions, how to run')
     print('  - Old Python files: deleted')
     sys.exit(0)

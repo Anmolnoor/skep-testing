@@ -14,8 +14,17 @@
     #display-current::-webkit-scrollbar-thumb { background: #475569; border-radius: 2px; }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4">
-  <div class="w-full max-w-md bg-slate-800 rounded-3xl shadow-2xl border border-slate-700 overflow-hidden">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
+  <!-- Navigation bar -->
+  <nav class="w-full bg-slate-800 border-b border-slate-700 shadow-lg">
+    <div class="max-w-md mx-auto flex gap-2 px-4 py-3">
+      <button id="tab-calculator" data-view="calculator" class="btn flex-1 rounded-xl px-4 py-2 text-sm font-semibold bg-indigo-600 text-white">Calculator</button>
+      <button id="tab-todo" data-view="todo" class="btn flex-1 rounded-xl px-4 py-2 text-sm font-semibold text-slate-400 hover:bg-slate-700">Todo List</button>
+    </div>
+  </nav>
+
+  <main class="flex-1 flex items-start justify-center p-4">
+  <div id="view-calculator" class="w-full max-w-md bg-slate-800 rounded-3xl shadow-2xl border border-slate-700 overflow-hidden">
     <!-- Header / Display -->
     <div class="px-5 pt-5 pb-4 bg-slate-800">
       <div class="flex items-center justify-between mb-2">
@@ -76,6 +85,25 @@
     </div>
   </div>
 
+  <!-- Todo list view -->
+  <div id="view-todo" class="hidden w-full max-w-md bg-slate-800 rounded-3xl shadow-2xl border border-slate-700 overflow-hidden">
+    <div class="px-5 pt-5 pb-4">
+      <h1 class="text-slate-400 text-sm font-semibold tracking-wide uppercase mb-3">Todo List</h1>
+      <div class="flex gap-2">
+        <input id="todo-input" type="text" placeholder="What needs to be done?" autocomplete="off"
+               class="flex-1 min-w-0 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+        <button id="todo-add" class="btn rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-bold px-6">Add</button>
+      </div>
+      <p id="todo-error" class="hidden mt-3 text-rose-400 text-xs"></p>
+    </div>
+
+    <div class="px-5 pb-5">
+      <ul id="todo-list" class="space-y-2"></ul>
+      <p id="todo-empty" class="text-slate-500 text-sm text-center py-10">No todos yet — add one above.</p>
+    </div>
+  </div>
+  </main>
+
   <script>
     (function () {
       'use strict';
@@ -83,6 +111,7 @@
       const displayCurrent = document.getElementById('display-current');
       const displayExpression = document.getElementById('display-expression');
       const degRadToggle = document.getElementById('deg-rad-toggle');
+      const viewCalculator = document.getElementById('view-calculator');
 
       let current = '0';       // current input string
       let previous = null;     // previous operand (number)
@@ -322,6 +351,8 @@
 
       // Keyboard support
       document.addEventListener('keydown', function (e) {
+        // Ignore keystrokes while another view (e.g. the todo list) is showing
+        if (viewCalculator.classList.contains('hidden')) return;
         const key = e.key;
         if (key >= '0' && key <= '9') {
           e.preventDefault();
@@ -359,6 +390,149 @@
       });
 
       updateDisplay();
+    })();
+
+    // --- Nav bar + todo list ---
+    (function () {
+      'use strict';
+
+      const API = '/api/todos';
+      const views = {
+        calculator: document.getElementById('view-calculator'),
+        todo: document.getElementById('view-todo')
+      };
+      const tabs = document.querySelectorAll('nav button[data-view]');
+      const input = document.getElementById('todo-input');
+      const addBtn = document.getElementById('todo-add');
+      const list = document.getElementById('todo-list');
+      const emptyMsg = document.getElementById('todo-empty');
+      const errorMsg = document.getElementById('todo-error');
+
+      let todos = [];
+
+      function showError(message) {
+        errorMsg.textContent = message;
+        errorMsg.classList.toggle('hidden', !message);
+      }
+
+      function render() {
+        list.innerHTML = '';
+        emptyMsg.classList.toggle('hidden', todos.length > 0);
+
+        todos.forEach(function (todo) {
+          const li = document.createElement('li');
+          li.className = 'flex items-center gap-3 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3';
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.checked = Boolean(todo.completed);
+          checkbox.className = 'w-5 h-5 shrink-0 accent-emerald-500 cursor-pointer';
+          checkbox.addEventListener('change', function () {
+            toggleTodo(todo, checkbox.checked);
+          });
+
+          const text = document.createElement('span');
+          text.textContent = todo.text;
+          text.className = 'flex-1 text-sm break-words ' +
+            (todo.completed ? 'line-through text-slate-500' : 'text-slate-100');
+
+          const del = document.createElement('button');
+          del.textContent = 'Delete';
+          del.className = 'btn shrink-0 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold px-3 py-1.5';
+          del.addEventListener('click', function () { deleteTodo(todo.id); });
+
+          li.append(checkbox, text, del);
+          list.appendChild(li);
+        });
+      }
+
+      async function request(url, options) {
+        const res = await fetch(url, options);
+        if (!res.ok) throw new Error('Request failed with status ' + res.status);
+        return res.json();
+      }
+
+      async function loadTodos() {
+        try {
+          todos = await request(API);
+          showError('');
+        } catch (err) {
+          todos = [];
+          showError('Could not reach the server. Start it with: python3 server.py');
+        }
+        render();
+      }
+
+      async function addTodo() {
+        const text = input.value.trim();
+        if (!text) return;
+        try {
+          const todo = await request(API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text })
+          });
+          todos.push(todo);
+          input.value = '';
+          showError('');
+        } catch (err) {
+          showError('Could not add the todo.');
+        }
+        render();
+      }
+
+      async function toggleTodo(todo, completed) {
+        try {
+          const updated = await request(API + '/' + todo.id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ completed: completed })
+          });
+          todos = todos.map(function (t) { return t.id === updated.id ? updated : t; });
+          showError('');
+        } catch (err) {
+          showError('Could not update the todo.');
+        }
+        render();
+      }
+
+      async function deleteTodo(id) {
+        try {
+          await request(API + '/' + id, { method: 'DELETE' });
+          todos = todos.filter(function (t) { return t.id !== id; });
+          showError('');
+        } catch (err) {
+          showError('Could not delete the todo.');
+        }
+        render();
+      }
+
+      function activateView(name) {
+        Object.keys(views).forEach(function (key) {
+          views[key].classList.toggle('hidden', key !== name);
+        });
+        tabs.forEach(function (tab) {
+          const active = tab.dataset.view === name;
+          tab.classList.toggle('bg-indigo-600', active);
+          tab.classList.toggle('text-white', active);
+          tab.classList.toggle('text-slate-400', !active);
+          tab.classList.toggle('hover:bg-slate-700', !active);
+        });
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () { activateView(tab.dataset.view); });
+      });
+
+      addBtn.addEventListener('click', addTodo);
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addTodo();
+        }
+      });
+
+      loadTodos();
     })();
   </script>
 </body>
