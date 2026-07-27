@@ -6,6 +6,8 @@ A polished, single-page HTML calculator built with Tailwind CSS and vanilla Java
 
 This project is a self-contained `index.html` file — no build step, no dependencies beyond the Tailwind CSS CDN. Just open it in any modern browser and start calculating. The calculator features a two-section layout: a scientific functions grid (trigonometry, logarithms, powers, factorials, constants) and a basic operations grid (digits, arithmetic operators, equals, clear, and delete).
 
+A top nav bar switches between two views: the **Calculator** and a **Todo List**. The todo list is backed by `server.py`, a stdlib-only Python server that serves the page and exposes a small REST API, persisting todos to `data/todos.json`.
+
 ## Features
 
 ### Basic Arithmetic
@@ -26,6 +28,14 @@ This project is a self-contained `index.html` file — no build step, no depende
 - **Percentage** (%)
 - **Plus/minus toggle** (±)
 
+### Todo List
+- **Nav bar** to switch between the Calculator and Todo List views
+- **Add todos** with an input field and Add button (or press `Enter`)
+- **Toggle completion** with a checkbox — completed todos get a strikethrough
+- **Delete todos** with a per-row Delete button
+- **Empty state** message when there are no todos
+- **Persisted** server-side to `data/todos.json` via a REST API
+
 ### Design & UX
 - **Tailwind CSS** via CDN — no install required
 - **Dark theme** with a modern, clean look and rounded buttons
@@ -37,16 +47,24 @@ This project is a self-contained `index.html` file — no build step, no depende
 
 ## How to Run
 
-1. Download or clone the repository.
-2. Open `index.html` in any modern web browser (Chrome, Firefox, Safari, Edge).
-
-That's it — no server, no build step, no dependencies to install.
+The calculator works standalone — just open `index.html` in any modern browser. The todo list needs the server, since it persists data to disk.
 
 ```bash
 git clone <repo-url>
 cd skep-testing
-# Then open index.html in your browser
+python3 server.py          # then open http://localhost:8000
 ```
+
+`server.py` uses only the Python standard library (no `pip install` needed) and creates the `data/` directory on startup if it does not exist.
+
+### Todo API
+
+| Method | Path | Body | Description |
+|--------|------|------|-------------|
+| `GET` | `/api/todos` | — | List all todos |
+| `POST` | `/api/todos` | `{"text": "..."}` | Create a todo |
+| `PUT` | `/api/todos/<id>` | `{"text": "...", "completed": true}` | Update a todo |
+| `DELETE` | `/api/todos/<id>` | — | Delete a todo |
 
 ## Tech Stack
 
@@ -59,7 +77,11 @@ cd skep-testing
 ```text
 .
 ├── README.md      # Project documentation (this file)
-└── index.html     # Complete calculator app (self-contained)
+├── check.py       # Verification script (python3 check.py)
+├── index.html     # Calculator + todo list UI
+├── server.py      # Static file server + todo REST API (stdlib only)
+└── data/          # Todo storage (git-ignored, created on startup)
+    └── todos.json
 ```
 
 ## Keyboard Shortcuts
